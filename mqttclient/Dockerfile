@@ -5,6 +5,9 @@ ENV HOME /root
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update
+RUN apt-get install -y openssh-server
+RUN mkdir /var/run/sshd 
+
 RUN echo "root:iot" |chpasswd
 # Bad security, add a user and sudo instead!
 RUN sed --in-place=.bak 's/without-password/yes/' /etc/ssh/sshd_config
@@ -19,4 +22,5 @@ RUN adduser --system --disabled-password --disabled-login mosquitto
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 ADD client.sh /root/
 EXPOSE 22
+CMD    /usr/sbin/sshd -D
 CMD ["/root/client.sh"]

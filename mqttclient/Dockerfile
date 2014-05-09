@@ -20,7 +20,9 @@ RUN cp /usr/local/src/mosquitto-1.3/lib/libmosquitto.so.1 /lib/libmosquitto.so.1
 
 RUN adduser --system --disabled-password --disabled-login mosquitto
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-ADD client.sh /root/
+ADD client.sh /root/client.sh
+
 EXPOSE 22
+
 CMD ["/usr/sbin/sshd -D"]
 CMD ["/root/client.sh"]

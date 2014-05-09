@@ -22,5 +22,5 @@ RUN adduser --system --disabled-password --disabled-login mosquitto
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 ADD client.sh /root/
 EXPOSE 22
-CMD    /usr/sbin/sshd -D
+CMD ["/usr/sbin/sshd -D"]
 CMD ["/root/client.sh"]

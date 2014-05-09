@@ -6,7 +6,6 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update
 RUN apt-get install -y openssh-server
-#RUN mkdir /var/run/sshd 
 
 RUN echo "root:iot" |chpasswd
 # Bad security, add a user and sudo instead!
@@ -21,8 +20,6 @@ RUN cp /usr/local/src/mosquitto-1.3/lib/libmosquitto.so.1 /lib/libmosquitto.so.1
 RUN adduser --system --disabled-password --disabled-login mosquitto
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 ADD client.sh /root/client.sh
+EXPOSE 1883
 
-EXPOSE 22
-
-CMD ["/usr/sbin/sshd -D"]
 CMD ["/root/client.sh"]

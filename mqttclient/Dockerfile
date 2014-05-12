@@ -20,7 +20,6 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 EXPOSE 1883
 EXPOSE 22
-ADD client.sh /root/client.sh
-RUN chmod +x /root/client.sh
 CMD ["/usr/local/sbin/mosquitto"]
-CMD ["/root/client.sh"]
+#ADD client.sh /root/client.sh
+#CMD ["/root/client.sh"]

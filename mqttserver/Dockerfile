@@ -5,7 +5,7 @@ ENV HOME /root
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update
-#RUN apt-get install -y openssh-server
+RUN apt-get install -y openssh-server
 #RUN mkdir /var/run/sshd 
 RUN echo "root:iot" |chpasswd
 # Bad security, add a user and sudo instead!

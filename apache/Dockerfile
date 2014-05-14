@@ -2,11 +2,16 @@ FROM ubuntu
 MAINTAINER Tobias Lindener <tobias.lindener@gmail.com>
 
 # Install the relevant packages
-RUN apt-get update && apt-get install apache2 libapache2-mod-php5 -y
-
+RUN apt-get update && apt-get install apache2 libapache2-mod-php5 php5-dev php-pear -y
+RUN apt-get install apt-utils wget build-essential libwrap0-dev libssl-dev python-distutils-extra libc-ares-dev -y
+RUN mkdir -p /usr/local/src
+RUN wget -O - http://mosquitto.org/files/source/mosquitto-1.3.tar.gz | tar -xvz -C /usr/local/src
+RUN cd /usr/local/src/mosquitto-1.3; make; make install
+RUN cp /usr/local/src/mosquitto-1.3/lib/libmosquitto.so.1 /lib/libmosquitto.so.1 
 # Enable the php mod we just installed
 RUN a2enmod php5
-
+RUN echo "extension=mosquitto.so" >> /etc/php5/apache2/php.ini 
+RUN pecl install Mosquitto-alpha
 # Add our websites files to the default apache directory (/var/www)
 ADD index.php /var/www/index.php
 

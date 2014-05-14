@@ -11,6 +11,7 @@ RUN mkdir -p /usr/local/src
 RUN cd /usr/local/src; wget -O hivemq.zip  http://www.hivemq.com/downloads/releases/latest
 RUN cd /usr/local/src; unzip hivemq.zip
 RUN chmod 755 /usr/local/src/hivemq-1.5.0/bin/run.sh 
+RUN rm /usr/local/src/hivemq-1.5.0/conf/configuration.properties
 ADD configuration.properties /usr/local/src/hivemq-1.5.0/conf/configuration.properties
 
 EXPOSE 1883

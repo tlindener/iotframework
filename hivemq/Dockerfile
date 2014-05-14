@@ -5,16 +5,15 @@ ENV HOME /root
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update
-RUN apt-get install apt-utils wget build-essential libwrap0-dev libssl-dev python-distutils-extra libc-ares-dev -y
+RUN apt-get install openjdk-7-jre-headless unzip apt-utils wget build-essential libwrap0-dev libssl-dev python-distutils-extra libc-ares-dev -y
+ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64
 RUN mkdir -p /usr/local/src
-RUN cd /usr/local/src
-RUN wget -O - http://www.hivemq.com/downloads/releases/latest
-RUN unzip hivemq-1.5.0.zip
-RUN cd /usr/local/src/hivemq-1.5.0
-RUN chmod 755 run.sh 
+RUN cd /usr/local/src; wget -O hivemq.zip  http://www.hivemq.com/downloads/releases/latest
+RUN cd /usr/local/src; unzip hivemq.zip
+RUN chmod 755 /usr/local/src/hivemq-1.5.0/bin/run.sh 
 
 EXPOSE 1883
-CMD ["/usr/local/src/run.sh"]
+CMD ["/usr/local/src/hivemq-1.5.0/bin/run.sh"]
 
 
 

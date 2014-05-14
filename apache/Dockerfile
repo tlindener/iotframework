@@ -8,10 +8,10 @@ RUN apt-get update && apt-get install apache2 libapache2-mod-php5 -y
 RUN a2enmod php5
 
 # Add our websites files to the default apache directory (/var/www)
-ADD www /var/
+ADD index.php /var/www/index.php
 
 # Update our apache sites available with the config we created
-ADD apache-config.conf /etc/apache2/sites-available/default
+ADD apache-config.conf /etc/apache2/sites-enabled/000-default.conf
 
 # expose port 80 so that our webserver can respond to requests.
 EXPOSE 80

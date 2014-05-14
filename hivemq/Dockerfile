@@ -14,7 +14,7 @@ RUN chmod 755 /usr/local/src/hivemq-1.5.0/bin/run.sh
 RUN rm /usr/local/src/hivemq-1.5.0/conf/configuration.properties
 ADD configuration.properties /usr/local/src/hivemq-1.5.0/conf/configuration.properties
 
-EXPOSE 1883
+EXPOSE 80 81 1883
 CMD ["/usr/local/src/hivemq-1.5.0/bin/run.sh"]
 
 

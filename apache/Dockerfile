@@ -14,7 +14,7 @@ RUN echo "extension=mosquitto.so" >> /etc/php5/apache2/php.ini
 RUN pecl install Mosquitto-alpha
 # Add our websites files to the default apache directory (/var/www)
 ADD index.php /var/www/index.php
-ADD webclient /var/www/webclient/
+
 
 # Update our apache sites available with the config we created
 ADD apache-config.conf /etc/apache2/sites-enabled/000-default.conf

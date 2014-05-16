@@ -1,5 +1,6 @@
 __author__ = 'tlindener'
 import docker
+import subprocess
 
 class DockerContainer(object):
     StartedContainer = []
@@ -16,8 +17,6 @@ class DockerContainer(object):
         self.DockerBuildResult = self.docker.build(path=self.Dockerfilepath, tag=self.Tag, quiet=False, fileobj=None,
                                                nocache=False,
                                                rm=True, stream=False, timeout=None)
-        return self.DockerBuildResult
-
 
     def create(self):
         self.DockerCreateResult = self.docker.create_container(self.Tag, command=None, hostname=None, user=None,
@@ -25,28 +24,18 @@ class DockerContainer(object):
                                                        ports=None, environment=None, dns=None, volumes=None,
                                                        volumes_from=None, network_disabled=False, name=None,
                                                        entrypoint=None, cpu_shares=None, working_dir=None)
-        return self.DockerCreateResult
+        return self.DockerCreateResult.get("Id")
 
 
     def run(self):
         result = self.docker.start(self.DockerCreateResult)
         self.StartedContainer.append(result)
 
+    def kill(self):
+        self.docker.kill(self.DockerCreateResult.get("Id"))
 
-    def runmultiple(self, number):
-        for a in range(1, number + 1):
-            result = c.start(self.DockerCreateResult)
-            self.StartedContainer.append(result)
-
-
-    def kill(self, instance):
-        self.docker.kill(instance)
-
-
-    def killrunning(self):
-        for a in self.StartedContainer:
-            self.docker.kill(a)
-            self.StartedContainer.remove(a)
+	def attachtonetwork(self,bridge,ipaddress)
+		subprocess.call(['./pipework',br,self.DockerCreateResult.get("Id"),ipaddress])
 
 				  
 

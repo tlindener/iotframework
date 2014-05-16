@@ -34,8 +34,8 @@ class DockerContainer(object):
     def kill(self):
         self.docker.kill(self.DockerCreateResult.get("Id"))
 
-	def attachtonetwork(self,bridge,ipaddress)
-		subprocess.call(['./pipework',br,self.DockerCreateResult.get("Id"),ipaddress])
+    def attachtonetwork(self,bridge,ipaddress):
+	subprocess.call(['./pipework',bridge,self.DockerCreateResult.get("Id"),ipaddress])
 
 				  
 

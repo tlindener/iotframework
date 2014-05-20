@@ -4,6 +4,10 @@ docker build --rm -t tlindener/mqttclient .
 for i in {6..10}
 do
 	mqttserver=$(sudo docker run -d -P tlindener/mqttclient)
-	cd /home/iot/iotframework
-	./pipework br1 $mqttserver 192.168.5.$i/24
+	sudo docker inspect --format='{{ .State.Pid }}' $mqttserver 	
 done
+
+cd /home/iot/iotframework/mqttserver
+docker build --rm -t tlindener/mqttserver .
+mqttserver=$(sudo docker run -d -P tlindener/mqttserver)
+sudo docker inspect --format='{{ .State.Pid }}' $mqttserver

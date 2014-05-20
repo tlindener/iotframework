@@ -7,6 +7,9 @@ docker build --rm -t tlindener/mqttserver .
 
 ovs=$(docker run -p 6640:6640 -p 6633:6633 -p 6644:6644 --privileged=true -d -i -t davetucker/docker-ovs:2.1.2 /bin/supervisord -n)
 ovspid=$(docker inspect --format='{{ .State.Pid }}' $ovs)
+echo $ovs
+echo $ovspid
+mkdir -p /var/run/netns
 rm -f /var/run/netns/$ovspid
 ln -s /proc/$ovspid/ns/net /var/run/netns/$ovspid
 
@@ -14,8 +17,8 @@ mqttserver=$(docker run -d -P tlindener/mqttserver)
 mqttserverpid=$(docker inspect --format='{{ .State.Pid }}' $mqttserver)
 rm -f /var/run/netns/$mqttserverpid
 ln -s /proc/$mqttserverpid/ns/net /var/run/netns/$mqttserverpid
-echo $mqttserverpid
-
+echo $mqttserver
+echo $mqttserverpid 
 ovs-vsctl --db=tcp:172.17.42.1:6640 add-br br0
 ovs-vsctl --db=tcp:172.17.42.1:6640 set bridge br0 datapath_type=netdev
 
@@ -36,6 +39,7 @@ for i in {6..10}
 do
 	mqttclient=$(sudo docker run -d -P tlindener/mqttclient)
 	dockerpid=$(docker inspect --format='{{ .State.Pid }}' $mqttserver)
+	
 	rm -f /var/run/netns/$dockerpid
 	ln -s /proc/$dockerpid/ns/net /var/run/netns/$dockerpid
 	tmp=$(eth$dockerpid)

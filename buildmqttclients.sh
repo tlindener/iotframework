@@ -39,7 +39,7 @@ switchcounter=$(($switchcounter+1))
 for i in {6..10}
 do
 	mqttclient=$(sudo docker run -d -P tlindener/mqttclient)
-	dockerpid=$(docker inspect --format='{{ .State.Pid }}' $mqttserver)
+	dockerpid=$(docker inspect --format='{{ .State.Pid }}' $mqttclient)
 	
 	rm -f /var/run/netns/$dockerpid
 	ln -s /proc/$dockerpid/ns/net /var/run/netns/$dockerpid

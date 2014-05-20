@@ -19,6 +19,7 @@ rm -f /var/run/netns/$mqttserverpid
 ln -s /proc/$mqttserverpid/ns/net /var/run/netns/$mqttserverpid
 echo $mqttserver
 echo $mqttserverpid 
+apt-get install openvswitch-switch -y
 ovs-vsctl --db=tcp:172.17.42.1:6640 add-br br0
 ovs-vsctl --db=tcp:172.17.42.1:6640 set bridge br0 datapath_type=netdev
 

@@ -23,8 +23,8 @@ ovs-vsctl --db=tcp:172.17.42.1:6640 add-br br0
 ovs-vsctl --db=tcp:172.17.42.1:6640 set bridge br0 datapath_type=netdev
 
 switchcounter=1
-tmplinkname1=$("eth"$ovspid)
-tmplinkname2=$("eth"$mqttserverpid)
+tmplinkname1="eth$ovspid"
+tmplinkname2="eth$mqttserverpid"
 ip link add name $tmplinkname1 type veth peer name $tmplinkname2
 ip link set $tmplinkname1 netns $ovspid
 ip link set $tmplinkname2 netns $mqttserverpid
@@ -33,7 +33,7 @@ ip netns exec $ovspid ip link set $tmplinkname1 name eth$switchcounter
 ovs-vsctl --db=tcp:172.17.42.1:6640 add-port br0 eth$switchcounter 
 ip netns exec $mqttserverpid ifconfig eth1 192.168.5.5/24 up
 ip netns exec $ovspid ip link set eth$switchcounter up
-switchcounter=$($switchcounter+1)
+switchcounter=$(($switchcounter+1))
 
 for i in {6..10}
 do
@@ -42,7 +42,7 @@ do
 	
 	rm -f /var/run/netns/$dockerpid
 	ln -s /proc/$dockerpid/ns/net /var/run/netns/$dockerpid
-	tmp=$(eth$dockerpid)
+	tmp="eth$dockerpid"
 	ip link add name $tmp type veth peer name local-veth1
 	ip link set $tmp netns $ovspid
 	ip link set local-veth1 netns $dockerpid
@@ -51,7 +51,7 @@ do
 	ovs-vsctl --db=tcp:172.17.42.1:6640 add-port br0 eth$switchcounter 
 	ip netns exec $dockerpid ifconfig eth1 192.168.5.$i/24 up
 	ip netns exec $ovspid ip link set eth$switchcounter up
-	switchcounter=$($switchcounter+1)
+	switchcounter=$(($switchcounter+1))
 done
 
 

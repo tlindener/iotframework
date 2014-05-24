@@ -14,7 +14,7 @@ RUN cd /usr/local/src/mosquitto-1.3; make; make install
 RUN cp /usr/local/src/mosquitto-1.3/lib/libmosquitto.so.1 /lib/libmosquitto.so.1 
 RUN adduser --system --disabled-password --disabled-login mosquitto
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
+RUN echo 'root:root' |chpasswd
 RUN sed -i 's/.*session.*required.*pam_loginuid.so.*/session optional pam_loginuid.so/g' /etc/pam.d/sshd
 EXPOSE 22 1883
 CMD ["/usr/bin/supervisord"]

@@ -8,7 +8,7 @@ RUN apt-get install udev openssh-server supervisor apt-utils wget build-essentia
 
 RUN mkdir -p /var/run/sshd
 RUN mkdir -p /var/log/supervisor
-ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+ADD supervisord.conf /etc/supervisord/supervisord.conf
 RUN echo 'root:root' |chpasswd
 RUN sed -i 's/.*session.*required.*pam_loginuid.so.*/session optional pam_loginuid.so/g' /etc/pam.d/sshd
 RUN mkdir -p /usr/local/src
@@ -20,4 +20,4 @@ RUN ovsdb-tool create
 RUN ovsdb-server --remote=punix:/usr/local/var/run/openvswitch/db.sock --detach
 EXPOSE 6640 6633 6644
 
-CMD ["/usr/bin/supervisord"]
+CMD ["/usr/bin/supervisord -c /etc/supervisord"]

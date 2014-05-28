@@ -6,7 +6,7 @@ docker build --rm -t tlindener/mqttserver .
 cd /home/iot/iotframework/openvswitch
 docker build --rm -t tlindener/docker-ovs .
 
-ovs=$(docker run -p 6640:6640 -p 6633:6633 -p 6644:6644 --privileged=true -d -i -t tlindener/docker-ovs /bin/supervisord -n)
+ovs=$(docker run -p 5000:22 -p 6640:6640 -p 6633:6633 -p 6644:6644 --privileged=true -d -i -t tlindener/docker-ovs /bin/supervisord -n)
 ovspid=$(docker inspect --format='{{ .State.Pid }}' $ovs)
 echo $ovs
 echo $ovspid

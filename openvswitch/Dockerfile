@@ -18,6 +18,6 @@ RUN mkdir -p /dev/net
 RUN mkdir -p /usr/local/etc/openvswitch
 RUN ovsdb-tool create
 RUN ovsdb-server --remote=punix:/usr/local/var/run/openvswitch/db.sock --detach
-EXPOSE 6640 6633 6644
+EXPOSE 22 6640 6633 6644
 
 CMD ["/usr/bin/supervisord -c /etc/supervisord"]

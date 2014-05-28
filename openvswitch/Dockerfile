@@ -10,7 +10,7 @@ RUN mkdir -p /var/run/sshd
 RUN mkdir -p /var/log/supervisor
 ADD supervisord.conf /etc/supervisord/supervisord.conf
 RUN echo 'root:root' |chpasswd
-RUN sed -i 's/.*session.*required.*pam_loginuid.so.*/session optional pam_loginuid.so/g' /etc/pam.d/sshd
+RUN sed --in-place=.bak 's/without-password/yes/' /etc/ssh/sshd_config
 RUN mkdir -p /usr/local/src
 RUN wget -O - http://openvswitch.org/releases/openvswitch-2.1.2.tar.gz | tar -xvz -C /usr/local/src
 RUN cd /usr/local/src/openvswitch-2.1.2; ./configure; make; make install

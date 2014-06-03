@@ -15,7 +15,8 @@ RUN cp /usr/local/src/mosquitto-1.3/lib/libmosquitto.so.1 /lib/libmosquitto.so.1
 RUN adduser --system --disabled-password --disabled-login mosquitto
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 RUN echo 'root:root' |chpasswd
-RUN sed -i 's/.*session.*required.*pam_loginuid.so.*/session optional pam_loginuid.so/g' /etc/pam.d/sshd
+# Bad security, add a user and sudo instead!
+RUN sed --in-place=.bak 's/without-password/yes/' /etc/ssh/sshd_config
 EXPOSE 22 1883
 CMD ["/usr/bin/supervisord"]
 

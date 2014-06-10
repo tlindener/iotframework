@@ -4,7 +4,7 @@ from OpenVSwitch import OpenVSwitch
 
  
 ovs = DockerContainer("","davetucker/docker-ovs:2.1.2")
-ovs.create("/bin/supervisord -n")
+ovs.create("/bin/supervisord -n","[6633, 6640, 6644]")
 ovs.run()
 
 switch = OpenVSwitch("tcp:172.17.42.1:6640")

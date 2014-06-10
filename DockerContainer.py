@@ -34,8 +34,8 @@ class DockerContainer(object):
         return self.DockerCreateResult.get("Id")
 
 
-    def run(self):
-        result = self.docker.start(self.DockerCreateResult)
+    def run(self,portbindings):
+        result = self.docker.start(self.DockerCreateResult, port_bindings=portbindings)
         self.StartedContainer.append(result)
 		self.ContainerPid = results.get("Pid")
 		netnspath = "/var/run/netns/%d" % pid

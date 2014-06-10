@@ -12,11 +12,15 @@ class DockerContainer(object):
                                     timeout=10)
         self.Dockerfilepath = dockerfilepath
         self.Tag = tag
-		
+	self._ContainerPid = None		
     @property
     def ContainerPid(self):
-        """I'm the 'x' property."""
-        return self.ContainerPid
+        return self._ContainerPid
+
+    @ContainerPid.setter
+    def ContainerPid(self, value):
+	print(value)
+	self._ContainerPid = value
 
     def build(self):
         self.DockerBuildResult = self.docker.build(path=self.Dockerfilepath, tag=self.Tag, quiet=False, fileobj=None,
@@ -34,11 +38,12 @@ class DockerContainer(object):
         return self.DockerCreateResult.get("Id")
 
     def run(self,portbindings):
-        result = self.docker.start(self.DockerCreateResult, port_bindings=portbindings)
-        self.StartedContainer.append(result)
-	self.ContainerPid = result.get("Pid")
-	netnspath = "/var/run/netns/%d" % pid
-	procpath = "/proc/%d/ns/net" % pid
+        self.docker.start(self.DockerCreateResult, port_bindings=portbindings)
+       	result = self.docker.inspect_container(self.DockerCreateResult)
+	self.ContainerPid = result.get("State").get("Pid")
+	netnspath = "/var/run/netns/%d" % self.ContainerPid
+	procpath = "/proc/%d/ns/net" % self.ContainerPid
+	subprocess.call(["mkdir","/var/run/netns"])
 	subprocess.call(["rm","-f",netnspath])
 	subprocess.call(["ln","-s",procpath,netnspath])
 		
@@ -48,11 +53,11 @@ class DockerContainer(object):
 
     def attachtonetwork(self,foreignNamespace,foreignDevice,ownDevice,ipAddress):
 	tempDeviceName = "xcdf"
-	tempDeviceName2 = "local-%d" % tempDeviceName
+	tempDeviceName2 = "local-%s" % tempDeviceName
 	subprocess.call(["ip","link","add","name",tempDeviceName,"type","veth","peer","name",tempDeviceName2])
 	subprocess.call(["ip","link","set",tempDeviceName,"netns",foreignNamespace])
-	subprocess.call(["ip","link","set",tempDeviceName2,"netns",self.ContainerPid])
-	subprocess.call(["ip","netns","exec",self.ContainerPid,"ip","link","set",tempDeviceName2,"name",ownDevice])
+	subprocess.call(["ip","link","set",tempDeviceName2,"netns",str(self.ContainerPid)])
+	subprocess.call(["ip","netns","exec",str(self.ContainerPid),"ip","link","set",tempDeviceName2,"name",ownDevice])
 	subprocess.call(["ip","netns","exec",foreignNamespace,"ip","link","set",tempDeviceName,"name",foreignDevice])
 	switch = OpenVSwitch("tcp:172.17.42.1:6640")
 	switch.addPortToBridge("ovsbr0",foreignDevice)

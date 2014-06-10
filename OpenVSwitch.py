@@ -6,7 +6,7 @@ class OpenVSwitch(object):
     
 
 	def __init__(self, switchaddress):
-		self.SwitchAddress = "--db=%d" % switchaddress
+		self.SwitchAddress = "--db=%s" % switchaddress
 	
 	def addBridge(self,name):
 		subprocess.call(["ovs-vsctl",self.SwitchAddress,"add-br",name])

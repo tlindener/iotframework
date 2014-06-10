@@ -5,7 +5,7 @@ import subprocess
 class OpenVSwitch(object):
     
 
-    def __init__(self, switchaddress):
+	def __init__(self, switchaddress):
 		self.SwitchAddress = "--db=%d" % switchaddress
 	
 	def addBridge(self,name):

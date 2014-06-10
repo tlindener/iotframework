@@ -28,7 +28,7 @@ class DockerContainer(object):
 		initcommand = None
 	self.DockerCreateResult = self.docker.create_container(self.Tag, command=initcommand, hostname=None, user=None,
                                                        detach=False, stdin_open=False, tty=False, mem_limit=0,
-                                                       ports=None, environment=None, dns=None, volumes=None,
+                                                       ports=ports, environment=None, dns=None, volumes=None,
                                                        volumes_from=None, network_disabled=False, name=None,
                                                        entrypoint=None, cpu_shares=None, working_dir=None)
         return self.DockerCreateResult.get("Id")

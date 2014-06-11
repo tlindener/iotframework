@@ -6,12 +6,8 @@ import time
 ovs = DockerContainer("","davetucker/docker-ovs:2.1.2")
 ovs.create("/bin/supervisord -n",[6633, 6640, 6644])
 ovs.run({6633: 6633, 6640: 6640, 6644: 6644})
-<<<<<<< HEAD
-time.sleep(10)
-bridgeName = "ovsbr0"
-=======
 time.sleep(5)
->>>>>>> origin/iotframework-python
+bridgeName = "ovsbr0"
 switch = OpenVSwitch("tcp:172.17.42.1:6640")
 switch.addBridge(bridgeName)
 

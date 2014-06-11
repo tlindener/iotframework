@@ -18,14 +18,13 @@ class OpenVSwitch(object):
 		tempDeviceName = "xcdf"
 		tempDeviceName2 = "local-%s" % tempDeviceName
 		subprocess.call(["ip","link","add","name",tempDeviceName,"type","veth","peer","name",tempDeviceName2])
-		subprocess.call(["ip","link","set",tempDeviceName,"netns",switchPid])
-		subprocess.call(["ip","link","set",tempDeviceName2,"netns",containerPid])
-		subprocess.call(["ip","netns","exec",containerPid,"ip","link","set",str(tempDeviceName2),"name",containerDevice])
-		subprocess.call(["ip","netns","exec",switchPid,"ip","link","set",tempDeviceName,"name",switchDevice])
-		switch = OpenVSwitch(self.SwitchAddress)
-		switch.addPortToBridge(bridge,switchDevice)
-		subprocess.call(["ip","netns","exec",containerPid,"ifconfig",containerDevice,ipAddress,"up"])
-		subprocess.call(["ip","netns","exec",switchPid,"ip","link","set",switchDevice,"up"])
+		subprocess.call(["ip","link","set",tempDeviceName,"netns",str(switchPid)])
+		subprocess.call(["ip","link","set",tempDeviceName2,"netns",str(containerPid)])
+		subprocess.call(["ip","netns","exec",str(containerPid),"ip","link","set",tempDeviceName2,"name",containerDevice])
+		subprocess.call(["ip","netns","exec",str(switchPid),"ip","link","set",tempDeviceName,"name",switchDevice])
+		self.addPortToBridge(bridge,switchDevice)
+		subprocess.call(["ip","netns","exec",str(containerPid),"ifconfig",containerDevice,ipAddress,"up"])
+		subprocess.call(["ip","netns","exec",str(switchPid),"ip","link","set",switchDevice,"up"])
 	def attachSwitchToBridge(self,foreignBridge,foreignSwitchAddress,foreignSwitchPid, foreignSwitchDevice,switchBridge,switchPid,switchDevice,ipAddress):
 		switch = OpenVSwitch(foreignSwitchAddress)
 		switch.addPortToBridge(foreignBridge,foreignSwitchDevice)

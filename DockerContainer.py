@@ -38,7 +38,7 @@ class DockerContainer(object):
         return self.DockerCreateResult.get("Id")
 
     def run(self,portbindings):
-        self.docker.start(self.DockerCreateResult, port_bindings=portbindings)
+        self.docker.start(self.DockerCreateResult,privileged=True ,port_bindings=portbindings)
        	result = self.docker.inspect_container(self.DockerCreateResult)
 	self.ContainerPid = result.get("State").get("Pid")
 	netnspath = "/var/run/netns/%d" % self.ContainerPid
@@ -55,14 +55,14 @@ class DockerContainer(object):
 	tempDeviceName = "xcdf"
 	tempDeviceName2 = "local-%s" % tempDeviceName
 	subprocess.call(["ip","link","add","name",tempDeviceName,"type","veth","peer","name",tempDeviceName2])
-	subprocess.call(["ip","link","set",tempDeviceName,"netns",foreignNamespace])
+	subprocess.call(["ip","link","set",tempDeviceName,"netns",str(foreignNamespace)])
 	subprocess.call(["ip","link","set",tempDeviceName2,"netns",str(self.ContainerPid)])
-	subprocess.call(["ip","netns","exec",str(self.ContainerPid),"ip","link","set",tempDeviceName2,"name",ownDevice])
-	subprocess.call(["ip","netns","exec",foreignNamespace,"ip","link","set",tempDeviceName,"name",foreignDevice])
+	subprocess.call(["ip","netns","exec",str(self.ContainerPid),"ip","link","set",str(tempDeviceName2),"name",str(ownDevice)])
+	subprocess.call(["ip","netns","exec",str(foreignNamespace),"ip","link","set",str(tempDeviceName),"name",str(foreignDevice)])
 	switch = OpenVSwitch("tcp:172.17.42.1:6640")
 	switch.addPortToBridge("ovsbr0",foreignDevice)
-	subprocess.call(["ip","netns","exec",self.ContainerPid,"ifconfig",ownDevice,ipAddress,"up"])
-	subprocess.call(["ip","netns","exec",foreignNamespace,"ip","link","set",foreignDevice,"up"])
+	subprocess.call(["ip","netns","exec",str(self.ContainerPid),"ifconfig",str(ownDevice),ipAddress,"up"])
+	subprocess.call(["ip","netns","exec",str(foreignNamespace),"ip","link","set",str(foreignDevice),"up"])
 				  
 
 		

@@ -51,18 +51,6 @@ class DockerContainer(object):
     def kill(self):
         self.docker.kill(self.DockerCreateResult.get("Id"))
 
-    def attachtonetwork(self,foreignNamespace,foreignDevice,ownDevice,ipAddress):
-	tempDeviceName = "xcdf"
-	tempDeviceName2 = "local-%s" % tempDeviceName
-	subprocess.call(["ip","link","add","name",tempDeviceName,"type","veth","peer","name",tempDeviceName2])
-	subprocess.call(["ip","link","set",tempDeviceName,"netns",str(foreignNamespace)])
-	subprocess.call(["ip","link","set",tempDeviceName2,"netns",str(self.ContainerPid)])
-	subprocess.call(["ip","netns","exec",str(self.ContainerPid),"ip","link","set",str(tempDeviceName2),"name",str(ownDevice)])
-	subprocess.call(["ip","netns","exec",str(foreignNamespace),"ip","link","set",str(tempDeviceName),"name",str(foreignDevice)])
-	switch = OpenVSwitch("tcp:172.17.42.1:6640")
-	switch.addPortToBridge("ovsbr0",foreignDevice)
-	subprocess.call(["ip","netns","exec",str(self.ContainerPid),"ifconfig",str(ownDevice),ipAddress,"up"])
-	subprocess.call(["ip","netns","exec",str(foreignNamespace),"ip","link","set",str(foreignDevice),"up"])
 				  
 
 		

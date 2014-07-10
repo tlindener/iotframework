@@ -1,7 +1,12 @@
-<b>iotframework</b>
+<b>iotframework</b><br>
 This framework is designated to simulate applications in arbitrary network scenarios. It builts upon Docker and Open vSwitch to virtualize the whole environment.
 
-<b>License</b>
+<b>HowTo</b><br>
+Coming soon.
+
+
+
+<b>License</b><br>
 Copyright [2014] [Tobias Lindener]
 
 Licensed under the Apache License, Version 2.0 (the "License");
